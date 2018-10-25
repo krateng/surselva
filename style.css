@@ -1,0 +1,166 @@
+body {
+	background-color: #282828;
+	text-align: center;
+	color: #ebdbb2;
+	font-family: 'Roboto Mono', monospace;
+	background-image:url('background.jpg'), url('background_default.jpg');
+	background-size:cover;
+}
+
+div.input {
+	background-color:rgba(1,1,1,0.6);
+	padding:5px;
+	padding-left:10px;
+	display:inline-block;
+	
+	
+}
+
+div.files {
+	width:800px;
+	height:300px;
+	text-align:left;
+	white-space:nowrap;
+	overflow-x:hidden;
+	overflow-y: scroll;
+	background-color:rgba(1,1,1,0.6);
+	padding:5px;
+	padding-left:10px;
+	padding-right:10px;
+	display:inline-block;
+}
+
+::-webkit-scrollbar { 
+    display: none; 
+}
+
+div.files-wip {
+	width:800px;
+	height:30px;
+	text-align:left;
+	white-space:nowrap;
+	overflow: hidden;
+	background-color:rgba(1,1,1,0.6);
+	padding:5px;
+	padding-left:10px;
+	padding-right:10px;
+	display:inline-block;
+}
+
+.category {
+	display:inline-block;
+	width:800px;
+	background-color:#ebdbb2;
+	color:black;
+	padding:5px;
+	padding-left:10px;
+	padding-right:10px;
+}
+
+
+
+div.input input.urlinput {
+	width:600px;
+	background-color:transparent;
+	border:none;
+	outline:none;
+	color:#ffffff;
+	vertical-align:middle;
+}
+
+.button {
+	padding:5px;
+	background-color:#ebdbb2;
+	border:none;
+	outline:none;
+	margin-right:5px;
+	margin-top:1px;
+	margin-bottom:1px;
+	color:black;
+	display:inline-block;
+	
+	font-family: 'Roboto Mono', monospace;
+	width:90px;
+	cursor:pointer;
+	
+	text-align:center;
+	
+}
+.button-small {
+	padding-top:5px;
+	padding-bottom:5px;
+	background-color:#ebdbb2;
+	border:none;
+	outline:none;
+	margin-right:5px;
+	margin-top:3px;
+	margin-bottom:3px;
+	color:black;
+	display:inline-block;
+	
+	font-family: 'Roboto Mono', monospace;
+	width:31px;
+	
+	cursor:pointer;
+	
+	text-align:center;
+	
+	background-size:contain;
+	
+}
+
+.loadingbar-yes {
+	background-color:#ebdbb2;
+	display:inline-block;
+	
+	margin-top:3px;
+	margin-bottom:3px;
+	
+	
+	padding-top:5px;
+	padding-bottom:5px;
+}
+.loadingbar-no {
+	background-color:#000000;
+	display:inline-block;
+	margin-right:5px;
+	margin-top:3px;
+	margin-bottom:3px;
+	
+	
+	padding-top:5px;
+	padding-bottom:5px;
+}
+
+.save {
+	background-image:url('icon_save.png');
+}
+.watch {
+	background-image:url('icon_watch.png');
+}
+.delete {
+	background-image:url('icon_delete.png');
+}
+
+
+
+.button-small:hover,
+.button:hover {
+	color:#ebdbb2;
+	background-color:transparent;
+}
+
+
+
+h1 {
+	font-family: 'Pacifico', cursive;
+	text-align: center;
+	color: #ebdbb2;
+	font-size: 90;
+}
+
+a {
+	color: inherit;
+	text-decoration: none;
+}
+

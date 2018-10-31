@@ -78,7 +78,7 @@ def deleteVideo(id):
 	db_remove(id)
 	
 	try:
-		os.remove("download/videos/" + id + ".mp4")
+		os.remove("videos/" + id + ".mp4")
 	except:
 		log("Video file could not be deleted, adding it back to database to retain integrity")
 		addVideo(id)

@@ -54,8 +54,7 @@ def GET(k):
     
     <div class="category">""" + localisation["TEXT_VIDEOLIST"] + """</div><br/>
     <div class="files" id="filelist">
-    	<div class='loadingbar-yes' style='width:66px'>&nbsp;</div><div class='loadingbar-no' style='width:37px'>&nbsp;</div>Video<br/>
-    	<a href='/videos/33.mp4' download><div class='button-small save'>&nbsp;</div></a><a href='/videos/343.mp4'><div class='button-small watch'>&nbsp;</div></a><div class='button-small delete' onclick='deleteVideo("34")'>&nbsp;</div>Waaat<br/>
+    	
     </div><br/>
     
     

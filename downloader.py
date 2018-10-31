@@ -49,7 +49,7 @@ def download(id,speed):
 	trymp4 = getSettingBool("MP4")
 	url = "https://youtube.com/watch?v=" + id
 	if trymp4:
-		options = {'format': 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best','outtmpl':'videos/%(id)s','ratelimit':speed*1000,}
+		options = {'format': 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/bestvideo+bestaudio/best','outtmpl':'videos/%(id)s','ratelimit':speed*1000,}
 	else:
 		options = {'format': 'bestvideo+bestaudio/best','outtmpl':'videos/%(id)s','ratelimit':speed*1000,}
 	ydl = youtube_dl.YoutubeDL(options)

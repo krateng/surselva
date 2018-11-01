@@ -1,4 +1,5 @@
 from serverutil import *
+from settings import *
 from bottle import static_file
 import re
 import youtube_dl
@@ -43,7 +44,7 @@ def showVideos():
 		
 		log("Listing video " + l['id'] + ", title " + l['title'] + ", size " + str(l['size']) + ", loaded to " + str(l['loaded']) + "%")
 		if complete:
-			html += "<a href='/videos/" + id + ".mp4' download='" + title + "'><div class='button-small save'>&nbsp;</div></a><a href='/videos/" + id + ".mp4'><div class='button-small watch'>&nbsp;</div></a><div class='button-small delete' onclick='deleteVideo(\"" + id + "\")'>&nbsp;</div>" + title + "<br/>"
+			html += "<a href='/videos/" + id + ".mp4' download='" + title + ".mp4'><div class='button-small save'>&nbsp;</div></a><a href='/videos/" + id + ".mp4'><div class='button-small watch'>&nbsp;</div></a><div class='button-small delete' onclick='deleteVideo(\"" + id + "\")'>&nbsp;</div>" + title + "<br/>"
 		else:
 			##103 pixel in total
 			TOTAL_PIXEL = 103

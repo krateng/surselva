@@ -1,6 +1,7 @@
 import time
 import _thread
 from serverutil import *
+from settings import *
 import youtube_dl
 
 ### in KB
@@ -16,7 +17,7 @@ def loop():
 		log("Getting download speed rules...")
 		
 		global DOWNLOAD_SPEED
-		speeds = getSettingsDictPrefix("BANDWIDTH_")
+		speeds = getSettingsDictPrefixFull("BANDWIDTH_")
 
 		# just filling in the array with download speeds. only explicit declarations matter, -1 means the same speed is kept
 		#this is so we can immediately tell the downloader how long til the next speed change
@@ -61,7 +62,7 @@ def requestDL():
 	timeofday = tm.tm_hour*60*60 + tm.tm_min*60 + tm.tm_sec
 	log("Time of day: " + str(timeofday))
 	
-	speed = 10
+	speed = 0
 	
 	#go to the speeds from start to finish
 	for t in range(len(DOWNLOAD_SPEED)):

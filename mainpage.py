@@ -1,5 +1,6 @@
 import re
-from serverutil import log, getSettingsDict
+from serverutil import log
+from settings import *
 
 def GET(k):
 	

@@ -2,3 +2,5 @@ settings.ini
 __pycache__
 background.jpg
 todo
+*.sh
+*.html

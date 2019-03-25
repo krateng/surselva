@@ -4,6 +4,7 @@ from importlib.machinery import SourceFileLoader
 from serverutil import log, db_remove, createVideoFile
 import _thread
 import waitress
+from settings import getSettings
 
 #@route("/<pth:path>/<file:re:.*\\.html>")
 #@route("/<pth:path>/<file:re:.*\\.css>")
@@ -35,7 +36,7 @@ def mainpage():
 	keys = request.query
 	log("Requesting main page")
 	return SourceFileLoader("mainpage","mainpage.py").load_module().GET(keys)
-	
+
 @route("/xhttp")
 def xhttp():
 	keys = request.query
@@ -48,4 +49,7 @@ createVideoFile()
 ## other programs to always run with the server
 _thread.start_new_thread(SourceFileLoader("downloader","downloader.py").load_module().loop,())
 
-run(host='0.0.0.0', port=12345, server='waitress')
+
+port = getSettings("SERVER_PORT")[0]
+
+run(host='::', port=port, server='waitress')

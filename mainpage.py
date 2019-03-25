@@ -1,6 +1,8 @@
 import re
 from serverutil import log
 from settings import *
+import json
+
 
 def GET(k):
 
@@ -12,7 +14,7 @@ def GET(k):
 
 <html>
   <head>
-    <title>""" + localisation["TEXT_TITLE"] + """</title>
+    <title>""" + localisation["TITLE"] + """</title>
     <link rel="stylesheet" type="text/css" href="style.css">
     <link rel="icon" type="image/png" href="favicon.png">
 
@@ -30,9 +32,9 @@ def GET(k):
   </head>
   <body onload="pageLoad()">
     <br>
-    <h1>""" + localisation["TEXT_HEADER"] + """</h1>
+    <h1>""" + localisation["HEADER"] + """</h1>
 
-    	<div class="input">""" + localisation["TEXT_VIDEO"] + """: <input class="urlinput" id ="yturl" /> <div class="button" onclick="sendVideo()">""" + localisation["TEXT_SUBMIT"] + """</div></div>
+    	<div class="input">""" + localisation["VIDEO"] + """: <input class="urlinput" id ="yturl" /> <div class="button" onclick="sendVideo()">""" + localisation["SUBMIT"] + """</div></div>
 
     	<p id="status">&nbsp;</p>
     <br>
@@ -41,7 +43,7 @@ def GET(k):
     <br>
     <br>
 
-    <div class="category">""" + localisation["TEXT_VIDEOLIST"] + """</div><br/>
+    <div class="category">""" + localisation["VIDEOLIST"] + """</div><br/>
     <div class="files" id="filelist">
 
     </div><br/>

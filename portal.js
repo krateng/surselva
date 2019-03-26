@@ -27,7 +27,7 @@ function sendVideoDone() {
 	if (this.readyState == 4 && this.status == 200) {
 		document.getElementById("status").innerHTML = localisation[this.responseText];
 		document.getElementById("yturl").value = "";
-		listVideos();
+
 		window.setTimeout(clear,2000);
 	}
 
@@ -35,6 +35,7 @@ function sendVideoDone() {
 
 function clear() {
 	document.getElementById("status").innerHTML = "&nbsp;";
+	listVideos();
 }
 
 

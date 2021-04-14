@@ -6,6 +6,9 @@ import youtube_dl
 import _thread
 import os
 
+def str_to_bool(inp):
+	return (inp.lower() in ("true"))
+
 def GET(k):
 
 	if (k.delete):
@@ -15,8 +18,8 @@ def GET(k):
 		log("Request: Show Videos")
 		return showVideos()
 	if (k.add):
-		log("Request: Add Video " + k.add)
-		return addVideo(k.add)
+		log("Request: Add Video " + k.add + ", Audio: " + k.audioonly)
+		return addVideo(k.add,str_to_bool(k.audioonly))
 		
 	if (k.localisation):
 		log("Request: Get Localisation keys")
@@ -56,7 +59,7 @@ def showVideos():
 	
 	return html
 	
-def addVideo(id):
+def addVideo(id,audioonly):
 	log("Video ID to add: " + id)
 	
 	if not re.match(r"^[a-zA-Z0-9_\-]+$",id):
@@ -69,7 +72,7 @@ def addVideo(id):
 		return "ERROR_URL"
 		
 	
-	_thread.start_new_thread(getVideoInfo,(id,))
+	_thread.start_new_thread(getVideoInfo,(id,audioonly))
 	
 	return "SUCCESS"
 	
@@ -90,19 +93,30 @@ def deleteVideo(id):
 	
 	
 	
-def getVideoInfo(id):
+def getVideoInfo(id,audioonly):
 	log("Retrieving Metadata for Video " + id)
 	
 	url = "https://youtube.com/watch?v=" + id
-	options = {'format': 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best',}
+	if audioonly:
+		options = {
+			'format': 'bestaudio/best',
+			'postprocessors': [
+				{
+				'key': 'FFmpegExtractAudio',
+				'preferredcodec': 'mp3'
+				}
+			]
+		}
+	else:
+		options = {'format': 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best',}
 	ydl = youtube_dl.YoutubeDL(options)
 	info = ydl.extract_info(url,download=False)
-	title = info.get("title",None)
+	title = info.get("title","")
 	log("Title: " + title)
-	size = 0
-	for f in info.get("requested_formats",None):
+	size = info.get('filesize',0)
+	for f in info.get("requested_formats",[]):
 		size += f["filesize"]
 	log("Size: " + str(size) + " Bytes")
 	
-	db_add(id,title,size)
+	db_add(id,title,audioonly,size)
 	

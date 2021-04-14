@@ -21,6 +21,11 @@
     <h1>{{ localisation.HEADER }}</h1>
 
     	<div class="input">{{ localisation.VIDEO }}: <input class="urlinput" id ="yturl" /> <div class="button" onclick="sendVideo()">{{ localisation.SUBMIT }}</div></div>
+    	<br/>
+    	<div class="input">
+			<input id="audio" type="radio" name="mediatype" /><label for="audio">Audio</label>
+			<input id="video" type="radio" name="mediatype" checked /><label for="video">Video</label>
+		</div>
 
     	<p id="status">&nbsp;</p>
     <br>

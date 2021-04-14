@@ -12,12 +12,18 @@ function sendVideo() {
 	var url = document.getElementById("yturl").value;
 	id = url.replace(/.*v=(.*?)/,"$1")
 	id = id.replace(/(.*?)&.*/,"$1")
+	var audio = document.getElementById("audio").checked;
 
 
 	var xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = sendVideoDone;
-
-	xhttp.open("GET", "/xhttp?add=" + id, true);
+	
+	var data = {
+	  add: id,
+	  audioonly: audio
+	};
+	var searchParams = new URLSearchParams(data);
+	xhttp.open("GET", "/xhttp?" + searchParams.toString(), true);
 	console.log("Sending xhttp request to add id " + id);
 	xhttp.send();
 	console.log("Sent!");

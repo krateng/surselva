@@ -3,12 +3,24 @@ VERBOSE_LOGGING = False
 
 import random
 import os
+import yaml
 
 def logv(string):
 	if VERBOSE_LOGGING:
 		print(string)
 def log(string):
 	print(string)
+
+
+def load():
+	try:
+		with open("tasks.yml","r") as taskfile: tasks = yaml.safe_load(taskfile)
+	except:
+		tasks = []
+	return tasks
+def save(tasks):
+	with open("tasks.yml","w") as taskfile:
+		yaml.dump(tasks,taskfile)
 
 def fileadd(path,string):
 	try:
@@ -46,36 +58,33 @@ def fileread(path):
 		file.close()
 		return lines
 
-def db_add(id,title,size):
-	st = id + "\t" + title + "\t" + str(size) + "\n"
-	fileadd("todo",st)
+def db_add(id,title,audioonly,size):
+	tasks = load()
+	tasks.append({
+		"id":id,
+		"title":title,
+		"audioonly":audioonly,
+		"size":size
+	})
+	save(tasks)
 
 def db_remove(id):
-	lines = fileread("todo")
-	linestoretain = []
-	for l in lines:
-		if not l.startswith(id):
-			linestoretain.append(l)
-
-	fileoverwrite("todo",linestoretain)
+	tasks = load()
+	for element in tasks:
+		if element['id'] == id:
+			tasks.remove(element)
+			break # only remove first
+	save(tasks)
 
 def db_random():
-	lines = fileread("todo")
-	if (len(lines) == 0):
-		return ""
-	ids = []
-	for l in lines:
-		id = l.split("\t")[0]
-		if not fileDone(id):
-			ids.append(id)
-
-
-	if (len(ids) == 0):
+	tasks = load()
+	
+	if len(tasks) == 0:
 		return ""
 
-	nextup = random.choice(ids)
-	log("Next ID to download: " + nextup)
-	return nextup
+	nextup = random.choice(tasks)
+	log("Next ID to download: " + nextup['id'])
+	return nextup['id']
 
 def db_list():
 
@@ -100,44 +109,32 @@ def db_list():
 #
 
 
-	lines = fileread("todo")
-	list = []
-	for l in lines:
-		data = l.split("\t")
-		id = data[0]
-		title = data[1]
-		size = int(data[2])
+	tasks = load()
+	for t in tasks:
 		currentsize = 0
 		loaded = 0
 		done = False
 
 		for f in loadedfilesraw:
-			logv("Video " + id + " checking file " + f)
-			if (f.split(".")[0] == id and f.endswith(".mp4")):
+			logv("Video " + t['id'] + " checking file " + f)
+			if (f.split(".")[0] == t['id'] and f.endswith(".mp4")):
 				loaded = 100
 				done = True
 				break
-			elif (f.split(".")[0] == id):
-
-
+			elif (f.split(".")[0] == t['id']):
 				currentsize += os.path.getsize("videos/" + f)
 
 
 		if not done:
 
-
-			loaded = int(currentsize * 100 / size)
+			loaded = int(currentsize * 100 / t['size'])
 			if (loaded > 99):
 				loaded = 99
 
-
-		list.append({'id':id,'title':title,'size':size,'loaded':loaded})
-
+		t['loaded'] = loaded
 
 
-
-
-	return list
+	return tasks
 
 
 def fileDone(id):

@@ -4,7 +4,17 @@ from importlib.machinery import SourceFileLoader
 from serverutil import log, db_remove, createVideoFile
 import _thread
 import waitress
-from settings import getSettings
+from settings import getSettings, getSettingsDictPrefix
+from jinja2 import Environment, FileSystemLoader, select_autoescape
+import json
+
+
+jinjaenv = Environment(
+    loader=FileSystemLoader('.'),
+    autoescape=select_autoescape(['html', 'xml'])
+)
+page_template = jinjaenv.get_template('page.html.jinja')
+
 
 #@route("/<pth:path>/<file:re:.*\\.html>")
 #@route("/<pth:path>/<file:re:.*\\.css>")
@@ -35,7 +45,8 @@ def static(pth):
 def mainpage():
 	keys = request.query
 	log("Requesting main page")
-	return SourceFileLoader("mainpage","mainpage.py").load_module().GET(keys)
+	localisation = getSettingsDictPrefix("TEXT_")
+	return page_template.render({'localisation':localisation,'json':json.dumps(localisation)})
 
 @route("/xhttp")
 def xhttp():

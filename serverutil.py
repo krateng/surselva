@@ -22,41 +22,6 @@ def save(tasks):
 	with open("tasks.yml","w") as taskfile:
 		yaml.dump(tasks,taskfile)
 
-def fileadd(path,string):
-	try:
-		file = open(path,"a")
-		file.write(string)
-		x = True
-	except:
-		x = False
-	finally:
-		file.close()
-		return x
-
-
-def fileoverwrite(path,lines):
-	try:
-		file = open(path,"w")
-		for l in lines:
-			file.write(l)
-
-		x = True
-	except:
-		x = False
-	finally:
-		file.close()
-		return x
-
-
-def fileread(path):
-	try:
-		file = open(path,"r")
-		lines = file.readlines()
-	except:
-		lines = None
-	finally:
-		file.close()
-		return lines
 
 def db_add(id,title,audioonly,size):
 	tasks = load()
@@ -80,33 +45,15 @@ def db_random():
 	tasks = load()
 	
 	if len(tasks) == 0:
-		return ""
+		return "",False
 
 	nextup = random.choice(tasks)
 	log("Next ID to download: " + nextup['id'])
-	return nextup['id']
+	return nextup['id'],nextup['audioonly']
 
 def db_list():
 
 	loadedfilesraw = os.listdir(path="videos/")
-#	loadedfiles = []
-#	for f in loadedfilesraw:
-#		id = f.split(".")[0]
-#		size = 0
-#		if (f.endswith(".part")):
-#			done = False
-#			size = os.path.getsize("download/videos/" + f)
-#		elif (f.endswith(".mp4")):
-#			done = True
-#
-#		log("Found file: Done: " + str(done) + ", ID: " + id + ", size: " + str(size))
-#
-#		if (id in l['id'] for l in loadedfiles):
-#			l['size'] += size
-#
-#		else:
-#			loadedfiles.append({})
-#
 
 
 	tasks = load()
@@ -117,12 +64,13 @@ def db_list():
 
 		for f in loadedfilesraw:
 			logv("Video " + t['id'] + " checking file " + f)
-			if (f.split(".")[0] == t['id'] and f.endswith(".mp4")):
-				loaded = 100
-				done = True
-				break
-			elif (f.split(".")[0] == t['id']):
-				currentsize += os.path.getsize("videos/" + f)
+			if (f.split(".")[0] == t['id']):
+				if f.split(".")[-1] in ("mp4","mp3"):
+					loaded = 100
+					done = True
+					break
+				else:
+					currentsize += os.path.getsize("videos/" + f)
 
 
 		if not done:
@@ -161,6 +109,6 @@ def createSettingsFile():
 
 def createVideoFile():
 
-	if not os.path.isfile("todo"):
+	if not os.path.isfile("tasks.yml"):
 		log("Video file not found, creating!")
-		open('todo',"w+").close()
+		open('tasks.yml',"w+").close()

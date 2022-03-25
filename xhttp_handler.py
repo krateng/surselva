@@ -55,14 +55,8 @@ def add_video(id,audioonly):
 
 def delete_video(id):
 	log("Video ID to delete: " + id)
+	task_handler.remove_task(id) # will also take care of file
 
-	task_handler.remove_task(id)
-
-	try:
-		os.remove("videos/" + id + ".mp4")
-	except:
-		log("Video file could not be deleted, adding it back to database to retain integrity")
-		add_video(id)
 
 
 

@@ -7,6 +7,7 @@ from logger import log
 
 
 
+VIDEOFOLDER = os.path.join(globals.data_dir,"videos")
 
 
 class TaskFile:
@@ -39,7 +40,13 @@ def add_task(id,title,audioonly,size):
 		}
 
 def remove_task(id):
+
+
 	with TaskFile() as tasks:
+		taskinfo = tasks[id]
+		filename = f"{id}.{taskinfo['ext']}"
+		log(f"Remove video file {filename}")
+		os.remove(os.path.join(VIDEOFOLDER,filename))
 		del tasks[id]
 
 def random_task():
@@ -56,26 +63,32 @@ def random_task():
 		return nextup_id,nextup['audioonly']
 
 def check_tasks():
-	# updates whether dl is done
+
 	with TaskFile() as tasks:
 
-		videofolder = os.path.join(globals.data_dir,"videos")
-		loadedfilesraw = os.listdir(videofolder)
+		loadedfilesraw = os.listdir(VIDEOFOLDER)
+
 
 		for f in loadedfilesraw:
+			fullpath = os.path.join(VIDEOFOLDER,f)
 			id = f.split(".")[0]
 			if id in tasks:
+				# updates whether dl is done
 				if f.split(".")[-1] in ("mp4","mp3"):
 					tasks[id]['done'] = True
 					tasks[id]['ext'] = f.split(".")[-1]
+
+			else:
+				# deletes unassociated videos
+				log(f"Video {f} is orphaned, deleting...")
+				os.remove(fullpath)
 
 
 def list_tasks():
 
 	check_tasks()
 
-	videofolder = os.path.join(globals.data_dir,"videos")
-	loadedfilesraw = os.listdir(videofolder)
+	loadedfilesraw = os.listdir(VIDEOFOLDER)
 
 	with TaskFile() as tasks:
 		task_view = tasks
@@ -91,7 +104,7 @@ def list_tasks():
 		else:
 			for f in loadedfilesraw:
 				if (f.split(".")[0] == id):
-					currentsize += os.path.getsize(os.path.join(videofolder,f))
+					currentsize += os.path.getsize(os.path.join(VIDEOFOLDER,f))
 					break
 			loaded = int(currentsize * 100 / taskinfo['size'])
 			if (loaded > 99):
@@ -101,26 +114,3 @@ def list_tasks():
 
 
 	return task_view
-
-
-def fileDone(id):
-	videofolder = os.path.join(globals.data_dir,"videos")
-	loadedfilesraw = os.listdir(videofolder)
-
-	for lf in loadedfilesraw:
-		if (lf.endswith(".mp4") and lf.split(".")[0] == id) and not "temp" in lf.split("."):
-			return True
-
-	return False
-
-
-
-
-
-
-
-def createVideoFile():
-
-	if not os.path.isfile("tasks.yml"):
-		log("Video file not found, creating!")
-		open('tasks.yml',"w+").close()

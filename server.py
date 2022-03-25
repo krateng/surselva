@@ -31,7 +31,7 @@ def video(filename):
 
 @route("/<pth:path>")
 def static(pth):
-	log("Static file requested: " + pth)
+	#log("Static file requested: " + pth)
 	return static_file(pth,root="./static")
 
 @route("/xhttp")

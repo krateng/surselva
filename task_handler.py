@@ -1,4 +1,4 @@
-VERBOSE_LOGGING = False
+
 
 
 import random
@@ -6,12 +6,9 @@ import os
 import yaml
 
 import globals
+from logger import log
 
-def logv(string):
-	if VERBOSE_LOGGING:
-		print(string)
-def log(string):
-	print(string)
+
 
 
 
@@ -100,7 +97,7 @@ def db_list():
 def fileDone(id):
 	videofolder = os.path.join(globals.data_dir,"videos")
 	loadedfilesraw = os.listdir(videofolder)
-	
+
 	for lf in loadedfilesraw:
 		if (lf.endswith(".mp4") and lf.split(".")[0] == id) and not "temp" in lf.split("."):
 			return True

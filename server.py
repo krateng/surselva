@@ -7,7 +7,7 @@ from bottle import route, run, template, static_file, request
 import waitress
 
 
-from serverutil import log
+from logger import log
 from settings import get_settings
 import xhttp_handler
 import downloader

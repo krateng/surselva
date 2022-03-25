@@ -1,8 +1,13 @@
 import time
-import _thread
-from serverutil import *
-from settings import *
+import os
+
 import yt_dlp
+
+import task_handler
+from settings import get_settings
+import globals
+from logger import log
+
 
 WAIT = 120
 
@@ -17,7 +22,7 @@ def loop():
 			log(f"Not allowed to download right now, waiting {WAIT} seconds...");
 			time.sleep(WAIT)
 		else:
-			id,audioonly = db_random()
+			id,audioonly = task_handler.db_random()
 			if (id == ""):
 				log(f"No videos to download, sleeping for {WAIT} seconds!")
 				time.sleep(WAIT)
@@ -31,11 +36,12 @@ def loop():
 
 
 def download(id,speed,audioonly):
-	trymp4 = getSettingBool("MP4")
+	trymp4 = get_settings()['misc']['MP4']
 	url = "https://youtube.com/watch?v=" + id
+	outfile = os.path.join(globals.data_dir,"%(id)s")
 
 	options = {
-		'outtmpl':'videos/%(id)s',
+		'outtmpl':outfile,
 		'ratelimit':speed*1000
 	}
 	if audioonly:

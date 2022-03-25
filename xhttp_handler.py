@@ -4,9 +4,10 @@ import re
 import yt_dlp
 from threading import Thread
 
-from serverutil import *
-from settings import *
+import task_handler
+from settings import get_settings
 import globals
+from logger import log
 
 
 
@@ -55,13 +56,13 @@ def add_video(id,audioonly):
 def delete_video(id):
 	log("Video ID to delete: " + id)
 
-	db_remove(id)
+	task_handler.db_remove(id)
 
 	try:
 		os.remove("videos/" + id + ".mp4")
 	except:
 		log("Video file could not be deleted, adding it back to database to retain integrity")
-		addVideo(id)
+		task_handler.addVideo(id)
 
 
 
@@ -94,4 +95,4 @@ def getVideoInfo(id,audioonly):
 		size += f["filesize"]
 	log("Size: " + str(size) + " Bytes")
 
-	db_add(id,title,audioonly,size)
+	task_handler.db_add(id,title,audioonly,size)

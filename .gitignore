@@ -1,7 +1,6 @@
-settings.ini
 __pycache__
-background.jpg
-*.yml
+/data/*
+!/data/*_default.*
+
 *.sh
-*.html
 screenshot_fullsize.png

@@ -1,8 +1,6 @@
 import os
-import yaml
 import toml
 
-from serverutil import *
 import globals
 
 settingsfile = os.path.join(globals.data_dir,"settings.ini")

@@ -5,6 +5,8 @@ import random
 import os
 import yaml
 
+import globals
+
 def logv(string):
 	if VERBOSE_LOGGING:
 		print(string)
@@ -15,7 +17,7 @@ def log(string):
 
 class TaskFile:
 	def __init__(self):
-		self.taskfile = "tasks.yml"
+		self.taskfile = os.path.join(globals.data_dir,"tasks.yml")
 
 	def __enter__(self):
 		try:
@@ -58,7 +60,8 @@ def db_random():
 
 def db_list():
 
-	loadedfilesraw = os.listdir(path="videos/")
+	videofolder = os.path.join(globals.data_dir,"videos")
+	loadedfilesraw = os.listdir(videofolder)
 
 	tasklist = []
 	with TaskFile() as tasks:
@@ -77,7 +80,7 @@ def db_list():
 						done = True
 						break
 					else:
-						currentsize += os.path.getsize("videos/" + f)
+						currentsize += os.path.getsize(os.path.join(videofolder,f))
 
 
 			if not done:
@@ -95,7 +98,9 @@ def db_list():
 
 
 def fileDone(id):
-	loadedfilesraw = os.listdir(path="videos/")
+	videofolder = os.path.join(globals.data_dir,"videos")
+	loadedfilesraw = os.listdir(videofolder)
+	
 	for lf in loadedfilesraw:
 		if (lf.endswith(".mp4") and lf.split(".")[0] == id) and not "temp" in lf.split("."):
 			return True

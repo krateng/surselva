@@ -5,7 +5,7 @@ import sys
 
 from bottle import route, run, template, static_file, request
 import waitress
-from jinja2 import Environment, FileSystemLoader, select_autoescape
+
 
 from serverutil import log
 from settings import get_settings
@@ -21,11 +21,7 @@ for idx in range(len(sys.argv)):
 			raise
 
 
-jinjaenv = Environment(
-    loader=FileSystemLoader('./jinja'),
-    autoescape=select_autoescape(['html', 'xml'])
-)
-page_template = jinjaenv.get_template('page.html.jinja')
+
 
 
 @route("/<pth:path>")
@@ -39,6 +35,7 @@ def static(pth):
 @route("/")
 def mainpage():
 	keys = request.query
+	page_template = globals.jinjaenv.get_template('page.html.jinja')
 	log("Requesting main page")
 	localisation = get_settings()['localisation']
 	return page_template.render({'localisation':localisation,'json':json.dumps(localisation)})
@@ -46,7 +43,6 @@ def mainpage():
 @route("/xhttp")
 def xhttp():
 	keys = request.query
-	log("XHTTP Request")
 	return xhttp_handler.handle(keys)
 
 

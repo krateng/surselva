@@ -6,6 +6,7 @@ from threading import Thread
 
 from serverutil import *
 from settings import *
+import globals
 
 
 
@@ -15,48 +16,43 @@ def str_to_bool(inp):
 def handle(k):
 
 	if (k.delete):
-		log("Request: Delete Video " + k.delete)
+		log("XHTTP Request: Delete Video " + k.delete)
 		return delete_video(k.delete)
 	if (k.list):
-		log("Request: Show Videos")
+		log("XHTTP Request: Show Videos")
 		return show_videos()
 	if (k.add):
-		log(f"Request: Add Video {k.add}, Audio: {k.audioonly}")
+		log(f"XHTTP Request: Add Video {k.add}, Audio: {k.audioonly}")
 		return add_video(k.add,str_to_bool(k.audioonly))
 
 	if (k.localisation):
-		log("Request: Get Localisation keys")
-		return getSettingsDictPrefix("TEXT_")
+		log("XHTTP Request: Get Localisation keys")
+		return get_settings()['localisation']
 
 
 
 def show_videos():
-	log("Showing videos")
-
-	from server import jinjaenv
-
-	template = jinjaenv.get_template('videolist.html.jinja')
-
+	template = globals.jinjaenv.get_template('videolist.html.jinja')
 	return template.render(videos=db_list())
 
-def addVideo(id,audioonly):
-	log("Video ID to add: " + id)
-
+def add_video(id,audioonly):
 	if not re.match(r"^[a-zA-Z0-9_\-]+$",id):
 		log("Invalid URL")
 		return "ERROR_URL"
 
-	#there is no commitment from google to keep video ids at 11, but it's pretty likely to stay that way and I'd like to filter the urls as much as possible so we can do the actual request asynchronously and the user doesn't have to wait
+	#there is no commitment from google to keep video ids at 11, but it's pretty
+	# likely to stay that way and I'd like to filter the urls as much as possible
+	# so we can do the actual request asynchronously and the user doesn't have to wait
 	if (len(id) != 11):
 		log("Invalid URL")
 		return "ERROR_URL"
 
 
-	_thread.start_new_thread(getVideoInfo,(id,audioonly))
+	Thread(target=getVideoInfo,args=(id,audioonly)).start()
 
 	return "SUCCESS"
 
-def deleteVideo(id):
+def delete_video(id):
 	log("Video ID to delete: " + id)
 
 	db_remove(id)

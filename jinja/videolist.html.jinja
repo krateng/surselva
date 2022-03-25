@@ -1,0 +1,22 @@
+{% for vid in videos %}
+	{% if vid.loaded == 100 %}
+		<a href='/videos/{{ vid.id }}.mp4' download='{{ vid.title }}.mp4'>
+			<div class='button-small save'>&nbsp;</div>
+		</a>
+		<a href='/videos/{{ vid.id }}.mp4'>
+			<div class='button-small watch'>&nbsp;</div>
+		</a>
+		<div class='button-small delete' onclick='deleteVideo({{ vid.id }})'>&nbsp;</div>
+
+		{{ vid.title }}
+		<br/>
+	{% else %}
+		{% set TOTAL_PIXEL = 103 %}
+		{% set pixel_yes = int(TOTAL_PIXEL * vid.loaded / 100) %}
+		{% set pixel_no = TOTAL_PIXEL - pixel_yes %}
+		<div class='loadingbar-yes' style='width:{{ pixel_yes }}px'>&nbsp;</div>
+		<div class='loadingbar-no' style='width:{{ pixel_no }}px'>&nbsp;</div>
+		{{ vid.title }}
+		<br/>
+	{% endif %}
+{% endfor %}

@@ -1,66 +1,58 @@
-from bottle import route, run, template, static_file, request
 import os
-from importlib.machinery import SourceFileLoader
-from serverutil import log, db_remove, createVideoFile
-import _thread
-import waitress
-from settings import getSettings, getSettingsDictPrefix
-from jinja2 import Environment, FileSystemLoader, select_autoescape
+from threading import Thread
 import json
+import sys
+
+from bottle import route, run, template, static_file, request
+import waitress
+from jinja2 import Environment, FileSystemLoader, select_autoescape
+
+from serverutil import log
+from settings import get_settings
+import xhttp_handler
+import downloader
+import globals
+
+for idx in range(len(sys.argv)):
+	if sys.argv[idx] == "--datadir":
+		try:
+			globals.data_dir = sys.argv[idx+1]
+		except:
+			raise
 
 
 jinjaenv = Environment(
-    loader=FileSystemLoader('.'),
+    loader=FileSystemLoader('./jinja'),
     autoescape=select_autoescape(['html', 'xml'])
 )
 page_template = jinjaenv.get_template('page.html.jinja')
 
 
-#@route("/<pth:path>/<file:re:.*\\.html>")
-#@route("/<pth:path>/<file:re:.*\\.css>")
-#@route("/<pth:path>/<file:re:.*\\.js>")
-#@route("/<pth:path>/<file:re:.*\\.jpg>")
-#@route("/<pth:path>/<file:re:.*\\.png>")
-#@route("/<pth:path>/<file:re:.*\\.mp4>")
-#@route("/<pth:path>/<file:re:.*\\.mkv>")
 @route("/<pth:path>")
 def static(pth):
 	log("Static file requested: " + pth)
-	return static_file(pth,root="")
+	return static_file(pth,root="./static")
 
 
-#@route("/<page>")
-#@route("/<page>/")
-#def p_download(page):
-#	keys = request.query
-#	log("Requesting subpage: " + page)
-#	return SourceFileLoader(page,page + ".py").load_module().GET(keys)
-#@route("/download/")
-#def i_download():
-#	log("Requesting startpage")
-#	return static_file("download/index.html",root="")
 
 @route("")
 @route("/")
 def mainpage():
 	keys = request.query
 	log("Requesting main page")
-	localisation = getSettingsDictPrefix("TEXT_")
+	localisation = get_settings()['localisation']
 	return page_template.render({'localisation':localisation,'json':json.dumps(localisation)})
 
 @route("/xhttp")
 def xhttp():
 	keys = request.query
 	log("XHTTP Request")
-	return SourceFileLoader("download","download.py").load_module().GET(keys)
+	return xhttp_handler.handle(keys)
 
 
-createVideoFile()
+Thread(target=downloader.loop).start()
 
-## other programs to always run with the server
-_thread.start_new_thread(SourceFileLoader("downloader","downloader.py").load_module().loop,())
+host = "0.0.0.0" if "--ipv4" in sys.argv else "::"
+port = int(get_settings()['server']['port'])
 
-
-port = getSettings("SERVER_PORT")[0]
-
-run(host='::', port=port, server='waitress')
+run(host=host, port=port, server='waitress')

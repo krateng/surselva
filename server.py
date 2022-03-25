@@ -14,12 +14,7 @@ import xhttp_handler
 import downloader
 import globals
 
-for idx in range(len(sys.argv)):
-	if sys.argv[idx] == "--datadir":
-		try:
-			globals.data_dir = sys.argv[idx+1]
-		except:
-			raise
+
 
 
 

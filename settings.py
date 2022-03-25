@@ -4,7 +4,7 @@ import toml
 import globals
 
 settingsfile = os.path.join(globals.data_dir,"settings.ini")
-defaultfile = os.path.join(globals.data_dir,"settings_default.ini")
+defaultfile = "./settings_default.ini"
 
 
 with open(defaultfile) as dfd:
@@ -12,7 +12,7 @@ with open(defaultfile) as dfd:
 		settings = toml.load(dfd)
 	except:
 		settings = {}
-with open(settingsfile) as sfd:
+with open(settingsfile,'w+') as sfd:
 	try:
 		settings.update(toml.load(sfd))
 	except:

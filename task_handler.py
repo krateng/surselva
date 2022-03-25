@@ -8,11 +8,15 @@ from logger import log
 
 
 VIDEOFOLDER = os.path.join(globals.data_dir,"videos")
+TASKFILE = os.path.join(globals.data_dir,"tasks.yml")
+
+os.makedirs(VIDEOFOLDER,exist_ok=True)
+
 
 
 class TaskFile:
 	def __init__(self):
-		self.taskfile = os.path.join(globals.data_dir,"tasks.yml")
+		self.taskfile = TASKFILE
 
 	def __enter__(self):
 		try:
@@ -23,9 +27,12 @@ class TaskFile:
 			self.tasks = {}
 		return self.tasks
 	def __exit__(self,*_):
-		with open(self.taskfile,"w") as taskfiledesc:
+		with open(self.taskfile,"w+") as taskfiledesc:
 			yaml.dump(self.tasks,taskfiledesc)
 
+with TaskFile():
+	pass
+	# create empty
 
 
 

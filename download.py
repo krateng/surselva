@@ -2,7 +2,7 @@ from serverutil import *
 from settings import *
 from bottle import static_file
 import re
-import youtube_dl
+import yt_dlp
 import _thread
 import os
 
@@ -109,7 +109,7 @@ def getVideoInfo(id,audioonly):
 		}
 	else:
 		options = {'format': 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best',}
-	ydl = youtube_dl.YoutubeDL(options)
+	ydl = yt_dlp.YoutubeDL(options)
 	info = ydl.extract_info(url,download=False)
 	title = info.get("title","")
 	log("Title: " + title)

@@ -10,7 +10,7 @@ Works well with [viamala](https://github.com/krateng/viamala).
 
 * [bottle.py](https://github.com/bottlepy/bottle)
 * [waitress](https://github.com/Pylons/waitress)
-* [youtube-dl](https://github.com/rg3/youtube-dl)
+* [yt-dlp](https://github.com/yt-dlp/yt-dlp)
 
 ## Credit
 

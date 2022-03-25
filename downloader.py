@@ -2,7 +2,7 @@ import time
 import _thread
 from serverutil import *
 from settings import *
-import youtube_dl
+import yt_dlp
 
 ### in KB
 DOWNLOAD_SPEED =  ([-1] * 24)
@@ -69,7 +69,7 @@ def download(id,speed,audioonly):
 			]
 		})
 
-	ydl = youtube_dl.YoutubeDL(options)
+	ydl = yt_dlp.YoutubeDL(options)
 	info = ydl.download([url])
 
 

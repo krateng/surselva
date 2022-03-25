@@ -47,7 +47,7 @@ def mainpage():
 	log("Requesting main page")
 	localisation = get_settings()['localisation']
 	try:
-		background = random.choice(os.listdir(os.path.join(globals.data_dir,"backgrounds")))
+		background = random.choice(os.listdir(globals.user_folders['BACKGROUNDFOLDER']))
 	except:
 		background = ''
 	return page_template.render({

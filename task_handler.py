@@ -7,16 +7,10 @@ from logger import log
 
 
 
-VIDEOFOLDER = os.path.join(globals.data_dir,"videos")
-TASKFILE = os.path.join(globals.data_dir,"tasks.yml")
-
-os.makedirs(VIDEOFOLDER,exist_ok=True)
-
-
 
 class TaskFile:
 	def __init__(self):
-		self.taskfile = TASKFILE
+		self.taskfile = globals.user_files['TASKFILE']
 
 	def __enter__(self):
 		try:
@@ -53,7 +47,7 @@ def remove_task(id):
 		taskinfo = tasks[id]
 		filename = f"{id}.{taskinfo['ext']}"
 		log(f"Remove video file {filename}")
-		os.remove(os.path.join(VIDEOFOLDER,filename))
+		os.remove(os.path.join(globals.user_folders['VIDEOFOLDER'],filename))
 		del tasks[id]
 
 def random_task():
@@ -73,11 +67,11 @@ def check_tasks():
 
 	with TaskFile() as tasks:
 
-		loadedfilesraw = os.listdir(VIDEOFOLDER)
+		loadedfilesraw = os.listdir(globals.user_folders['VIDEOFOLDER'])
 
 
 		for f in loadedfilesraw:
-			fullpath = os.path.join(VIDEOFOLDER,f)
+			fullpath = os.path.join(globals.user_folders['VIDEOFOLDER'],f)
 			id = f.split(".")[0]
 			if id in tasks:
 				# updates whether dl is done
@@ -95,7 +89,7 @@ def list_tasks():
 
 	check_tasks()
 
-	loadedfilesraw = os.listdir(VIDEOFOLDER)
+	loadedfilesraw = os.listdir(globals.user_folders['VIDEOFOLDER'])
 
 	with TaskFile() as tasks:
 		task_view = tasks
@@ -111,7 +105,7 @@ def list_tasks():
 		else:
 			for f in loadedfilesraw:
 				if (f.split(".")[0] == id):
-					currentsize += os.path.getsize(os.path.join(VIDEOFOLDER,f))
+					currentsize += os.path.getsize(os.path.join(globals.user_folders['VIDEOFOLDER'],f))
 					break
 			loaded = int(currentsize * 100 / taskinfo['size'])
 			if (loaded > 99):

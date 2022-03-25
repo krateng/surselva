@@ -3,7 +3,7 @@ import toml
 
 import globals
 
-settingsfile = os.path.join(globals.data_dir,"settings.ini")
+settingsfile = globals.user_files['SETTINGSFILE']
 defaultfile = "./settings_default.ini"
 
 

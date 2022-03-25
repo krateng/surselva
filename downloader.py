@@ -22,7 +22,7 @@ def loop():
 			log(f"Not allowed to download right now, waiting {WAIT} seconds...");
 			time.sleep(WAIT)
 		else:
-			id,audioonly = task_handler.db_random()
+			id,audioonly = task_handler.random_task()
 			if (id == ""):
 				log(f"No videos to download, sleeping for {WAIT} seconds!")
 				time.sleep(WAIT)
@@ -32,13 +32,15 @@ def loop():
 					download(id,speed,audioonly)
 				except:
 					log("Error while downloading.")
+				# update task list info
+				task_handler.check_tasks()
 
 
 
 def download(id,speed,audioonly):
 	trymp4 = get_settings()['misc']['MP4']
 	url = "https://youtube.com/watch?v=" + id
-	outfile = os.path.join(globals.data_dir,"%(id)s")
+	outfile = os.path.join(globals.data_dir,"videos","%(id)s")
 
 	options = {
 		'outtmpl':outfile,
@@ -46,17 +48,18 @@ def download(id,speed,audioonly):
 	}
 	if audioonly:
 		options.update({
-			'format': 'bestaudio/best'
-		})
-	else:
-		options.update({
-			'format': 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/bestvideo+bestaudio/best',
+			'format': 'bestaudio/best',
 			'postprocessors': [
 				{
 				'key': 'FFmpegExtractAudio',
 				'preferredcodec': 'mp3'
 				}
 			]
+		})
+	else:
+		options.update({
+			'format': 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/bestvideo+bestaudio/best'
+
 		})
 
 	ydl = yt_dlp.YoutubeDL(options)

@@ -1,9 +1,10 @@
-{% for vid in videos %}
+{% for vidid in videos %}
+	{% set vid = videos[vidid] %}
 	{% if vid.loaded == 100 %}
-		<a href='/videos/{{ vid.id }}.mp4' download='{{ vid.title }}.mp4'>
+		<a href='/videos/{{ vid.id }}.{{ vid.ext }}' download='{{ vid.title }}.mp4'>
 			<div class='button-small save'>&nbsp;</div>
 		</a>
-		<a href='/videos/{{ vid.id }}.mp4'>
+		<a href='/videos/{{ vid.id }}.{{ vid.ext }}'>
 			<div class='button-small watch'>&nbsp;</div>
 		</a>
 		<div class='button-small delete' onclick='deleteVideo({{ vid.id }})'>&nbsp;</div>

@@ -23,12 +23,21 @@ for idx in range(len(sys.argv)):
 
 
 
+@route("/videos/<filename>")
+def video(filename):
+	log("Video file requested: " + filename)
+	return static_file(filename,root=os.path.join(globals.data_dir,"videos"))
+
 
 @route("/<pth:path>")
 def static(pth):
 	log("Static file requested: " + pth)
 	return static_file(pth,root="./static")
 
+@route("/xhttp")
+def xhttp():
+	keys = request.query
+	return xhttp_handler.handle(keys)
 
 
 @route("")
@@ -40,10 +49,9 @@ def mainpage():
 	localisation = get_settings()['localisation']
 	return page_template.render({'localisation':localisation,'json':json.dumps(localisation)})
 
-@route("/xhttp")
-def xhttp():
-	keys = request.query
-	return xhttp_handler.handle(keys)
+
+
+
 
 
 Thread(target=downloader.loop).start()

@@ -1,6 +1,3 @@
-
-
-
 import random
 import os
 import yaml
@@ -32,66 +29,78 @@ class TaskFile:
 
 
 
-def db_add(id,title,audioonly,size):
+def add_task(id,title,audioonly,size):
 	with TaskFile() as tasks:
 		tasks[id] = {
 			"title":title,
 			"audioonly":audioonly,
-			"size":size
+			"size":size,
+			"done":False
 		}
 
-def db_remove(id):
+def remove_task(id):
 	with TaskFile() as tasks:
 		del tasks[id]
 
-def db_random():
+def random_task():
 	with TaskFile() as tasks:
 
-		if len(tasks) == 0:
+		open_tasks = {k:v for k,v in tasks.items() if v['done'] is False}
+
+		if len(open_tasks) == 0:
 			return "",False
 
-		nextup_id = random.choice(list(tasks.keys()))
+		nextup_id = random.choice(list(open_tasks.keys()))
 		nextup = tasks[nextup_id]
 		log("Next ID to download: " + nextup_id)
 		return nextup_id,nextup['audioonly']
 
-def db_list():
+def check_tasks():
+	# updates whether dl is done
+	with TaskFile() as tasks:
+
+		videofolder = os.path.join(globals.data_dir,"videos")
+		loadedfilesraw = os.listdir(videofolder)
+
+		for f in loadedfilesraw:
+			id = f.split(".")[0]
+			if id in tasks:
+				if f.split(".")[-1] in ("mp4","mp3"):
+					tasks[id]['done'] = True
+					tasks[id]['ext'] = f.split(".")[-1]
+
+
+def list_tasks():
+
+	check_tasks()
 
 	videofolder = os.path.join(globals.data_dir,"videos")
 	loadedfilesraw = os.listdir(videofolder)
 
-	tasklist = []
 	with TaskFile() as tasks:
-		for id in tasks:
-			taskinfo = tasks[id]
-			taskinfo['id'] = id
-			currentsize = 0
-			loaded = 0
-			done = False
+		task_view = tasks
 
+	for id in task_view:
+		taskinfo = task_view[id]
+		taskinfo['id'] = id
+		currentsize = 0
+		loaded = 0
+
+		if taskinfo['done']:
+			loaded = 100
+		else:
 			for f in loadedfilesraw:
-				logv("Video " + id + " checking file " + f)
 				if (f.split(".")[0] == id):
-					if f.split(".")[-1] in ("mp4","mp3"):
-						loaded = 100
-						done = True
-						break
-					else:
-						currentsize += os.path.getsize(os.path.join(videofolder,f))
+					currentsize += os.path.getsize(os.path.join(videofolder,f))
+					break
+			loaded = int(currentsize * 100 / taskinfo['size'])
+			if (loaded > 99):
+				loaded = 99
+
+		taskinfo['loaded'] = loaded
 
 
-			if not done:
-
-				loaded = int(currentsize * 100 / taskinfo['size'])
-				if (loaded > 99):
-					loaded = 99
-
-			taskinfo['loaded'] = loaded
-
-			tasklist.append(taskinfo)
-
-
-		return tasklist
+	return task_view
 
 
 def fileDone(id):

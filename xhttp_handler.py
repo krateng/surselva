@@ -34,7 +34,7 @@ def handle(k):
 
 def show_videos():
 	template = globals.jinjaenv.get_template('videolist.html.jinja')
-	return template.render(videos=db_list())
+	return template.render(videos=task_handler.list_tasks())
 
 def add_video(id,audioonly):
 	if not re.match(r"^[a-zA-Z0-9_\-]+$",id):
@@ -56,13 +56,13 @@ def add_video(id,audioonly):
 def delete_video(id):
 	log("Video ID to delete: " + id)
 
-	task_handler.db_remove(id)
+	task_handler.remove_task(id)
 
 	try:
 		os.remove("videos/" + id + ".mp4")
 	except:
 		log("Video file could not be deleted, adding it back to database to retain integrity")
-		task_handler.addVideo(id)
+		add_video(id)
 
 
 
@@ -95,4 +95,4 @@ def getVideoInfo(id,audioonly):
 		size += f["filesize"]
 	log("Size: " + str(size) + " Bytes")
 
-	task_handler.db_add(id,title,audioonly,size)
+	task_handler.add_task(id,title,audioonly,size)

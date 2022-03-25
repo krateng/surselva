@@ -12,7 +12,7 @@ with open(defaultfile) as dfd:
 		settings = toml.load(dfd)
 	except:
 		settings = {}
-with open(settingsfile,'w+') as sfd:
+with open(settingsfile) as sfd:
 	try:
 		settings.update(toml.load(sfd))
 	except:

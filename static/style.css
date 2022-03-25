@@ -3,7 +3,6 @@ body {
 	text-align: center;
 	color: #ebdbb2;
 	font-family: 'Roboto Mono', monospace;
-	background-image:url('background.jpg'), url('background_default.jpg');
 	background-size:cover;
 }
 
@@ -12,8 +11,8 @@ div.input {
 	padding:5px;
 	padding-left:10px;
 	display:inline-block;
-	
-	
+
+
 }
 
 div.files {
@@ -30,8 +29,8 @@ div.files {
 	display:inline-block;
 }
 
-::-webkit-scrollbar { 
-    display: none; 
+::-webkit-scrollbar {
+    display: none;
 }
 
 div.files-wip {
@@ -78,13 +77,13 @@ div.input input.urlinput {
 	margin-bottom:1px;
 	color:black;
 	display:inline-block;
-	
+
 	font-family: 'Roboto Mono', monospace;
 	width:90px;
 	cursor:pointer;
-	
+
 	text-align:center;
-	
+
 }
 .button-small {
 	padding-top:5px;
@@ -97,26 +96,26 @@ div.input input.urlinput {
 	margin-bottom:3px;
 	color:black;
 	display:inline-block;
-	
+
 	font-family: 'Roboto Mono', monospace;
 	width:31px;
-	
+
 	cursor:pointer;
-	
+
 	text-align:center;
-	
+
 	background-size:contain;
-	
+
 }
 
 .loadingbar-yes {
 	background-color:#ebdbb2;
 	display:inline-block;
-	
+
 	margin-top:3px;
 	margin-bottom:3px;
-	
-	
+
+
 	padding-top:5px;
 	padding-bottom:5px;
 }
@@ -126,8 +125,8 @@ div.input input.urlinput {
 	margin-right:5px;
 	margin-top:3px;
 	margin-bottom:3px;
-	
-	
+
+
 	padding-top:5px;
 	padding-bottom:5px;
 }
@@ -163,4 +162,3 @@ a {
 	color: inherit;
 	text-decoration: none;
 }
-

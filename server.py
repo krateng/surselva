@@ -2,6 +2,7 @@ import os
 from threading import Thread
 import json
 import sys
+import random
 
 from bottle import route, run, template, static_file, request
 import waitress
@@ -27,6 +28,9 @@ for idx in range(len(sys.argv)):
 def video(filename):
 	log("Video file requested: " + filename)
 	return static_file(filename,root=os.path.join(globals.data_dir,"videos"))
+@route("/backgrounds/<filename>")
+def backgrounds(filename):
+	return static_file(filename,root=os.path.join(globals.data_dir,"backgrounds"))
 
 
 @route("/<pth:path>")
@@ -47,7 +51,15 @@ def mainpage():
 	page_template = globals.jinjaenv.get_template('page.html.jinja')
 	log("Requesting main page")
 	localisation = get_settings()['localisation']
-	return page_template.render({'localisation':localisation,'json':json.dumps(localisation)})
+	try:
+		background = random.choice(os.listdir(os.path.join(globals.data_dir,"backgrounds")))
+	except:
+		background = ''
+	return page_template.render({
+		'localisation':localisation,
+		'localisation_json':json.dumps(localisation),
+		'background':background
+	})
 
 
 

@@ -4,31 +4,31 @@ import json
 import sys
 import random
 
-from bottle import route, run, template, static_file, request
+from bottle import route, run, template, static_file, request, get
 import waitress
 
-
+import globals
 from logger import log
 from settings import get_settings
 import xhttp_handler
 import downloader
-import globals
 
 
 
 
 
 
-@route("/videos/<filename>")
+
+@get("/videos/<filename>")
 def video(filename):
 	log("Video file requested: " + filename)
 	return static_file(filename,root=os.path.join(globals.data_dir,"videos"))
-@route("/backgrounds/<filename>")
+@get("/backgrounds/<filename>")
 def backgrounds(filename):
 	return static_file(filename,root=os.path.join(globals.data_dir,"backgrounds"))
 
 
-@route("/<pth:path>")
+@get("/<pth:path>")
 def static(pth):
 	#log("Static file requested: " + pth)
 	return static_file(pth,root="./static")
@@ -39,8 +39,8 @@ def xhttp():
 	return xhttp_handler.handle(keys)
 
 
-@route("")
-@route("/")
+@get("")
+@get("/")
 def mainpage():
 	keys = request.query
 	page_template = globals.jinjaenv.get_template('page.html.jinja')

@@ -16,40 +16,47 @@ def load():
 	try:
 		with open("tasks.yml","r") as taskfile: tasks = yaml.safe_load(taskfile)
 	except:
-		tasks = []
+		tasks = {}
 	return tasks
 def save(tasks):
 	with open("tasks.yml","w") as taskfile:
 		yaml.dump(tasks,taskfile)
 
+class TaskFile:
+	def __open__(self):
+		self.tasks = load()
+		return self.tasks
+	def __close__(self):
+		save(self.tasks)
+
+
+
+
 
 def db_add(id,title,audioonly,size):
 	tasks = load()
-	tasks.append({
-		"id":id,
+	tasks[id] = {
 		"title":title,
 		"audioonly":audioonly,
 		"size":size
-	})
+	}
 	save(tasks)
 
 def db_remove(id):
 	tasks = load()
-	for element in tasks:
-		if element['id'] == id:
-			tasks.remove(element)
-			break # only remove first
+	del tasks[id]
 	save(tasks)
 
 def db_random():
 	tasks = load()
-	
+
 	if len(tasks) == 0:
 		return "",False
 
-	nextup = random.choice(tasks)
-	log("Next ID to download: " + nextup['id'])
-	return nextup['id'],nextup['audioonly']
+	nextup_id = random.choice(list(tasks.keys()))
+	nextup = tasks[nextup_id]
+	log("Next ID to download: " + nextup_id)
+	return nextup_id,nextup['audioonly']
 
 def db_list():
 
@@ -57,14 +64,15 @@ def db_list():
 
 
 	tasks = load()
-	for t in tasks:
+	for id in tasks:
+		taskinfo = tasks[id]
 		currentsize = 0
 		loaded = 0
 		done = False
 
 		for f in loadedfilesraw:
-			logv("Video " + t['id'] + " checking file " + f)
-			if (f.split(".")[0] == t['id']):
+			logv("Video " + id + " checking file " + f)
+			if (f.split(".")[0] == id):
 				if f.split(".")[-1] in ("mp4","mp3"):
 					loaded = 100
 					done = True
@@ -75,11 +83,11 @@ def db_list():
 
 		if not done:
 
-			loaded = int(currentsize * 100 / t['size'])
+			loaded = int(currentsize * 100 / taskinfo['size'])
 			if (loaded > 99):
 				loaded = 99
 
-		t['loaded'] = loaded
+		taskinfo['loaded'] = loaded
 
 
 	return tasks

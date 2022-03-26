@@ -1,6 +1,5 @@
 import os
 from threading import Thread
-import json
 import sys
 import random
 
@@ -52,7 +51,6 @@ def mainpage():
 		background = ''
 	return page_template.render({
 		'localisation':localisation,
-		'localisation_json':json.dumps(localisation),
 		'background':background
 	})
 
